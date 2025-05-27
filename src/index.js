@@ -11,6 +11,7 @@ import pool, { connectDB, testConnection } from "./connection/db/connect.js";
 import userRoutes from "./routes/userRoutes.js";
 import { fileURLToPath } from "url";
 import errorHandler from "./middlewares/errorHandler.js";
+import setupDatabase from "./data/setup/setupDatabase.js";
 
 // Setup environment
 dotenv.config();
@@ -53,15 +54,15 @@ app.use("/api/v1/users", userRoutes);
 app.get("/", (req, res) => {
   res.status(200).send(`
     <html>
-      <head><title>Student Management API</title></head>
+      <head><title>Users Management API</title></head>
       <body style="font-family: sans-serif">
-        <h1 style="color: darkblue">Welcome to the Student Management API</h1>
-        <p>This API allows you to manage student records efficiently.</p>
-        <p><strong>Message:</strong> Student Management API</p>
+        <h1 style="color: darkblue">Welcome to the Users Management API</h1>
+        <p>This API allows you to manage user records efficiently.</p>
+        <p><strong>Message:</strong> Users Management API</p>
         <p><strong>Version:</strong> 1.0.0</p>
         <ul>
           <li>API Base: <code>/api/v1</code></li>
-          <li>Students Endpoint: <code>/api/v1/students</code></li>
+          <li>Users Endpoint: <code>/api/v1/users</code></li>
         </ul>
       </body>
     </html>
@@ -90,7 +91,7 @@ app.get(errorHandler);
 // Initialize Application
 const initializeApp = async () => {
   try {
-    console.log("🚀 Starting Student Management API...".cyan.bold);
+    console.log("🚀 Starting Users Management API...".cyan.bold);
     console.log(`🌍 Environment: ${process.env.NODE_ENV}`.blue);
     console.log(`🖥️  Server: ${process.env.HOST}:${process.env.PORT}`.yellow);
 
@@ -99,6 +100,10 @@ const initializeApp = async () => {
 
     const dbConnected = await testConnection();
     if (!dbConnected) throw new Error("Test connection failed");
+
+    if (process.env.NODE_ENV === "development") {
+      await setupDatabase(); // Create & seed only in dev
+    }
 
     app.listen(process.env.PORT, process.env.HOST, () => {
       console.log(`🎉 Server running at ${process.env.HOST_URL}`.rainbow);
