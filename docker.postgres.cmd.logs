@@ -15,8 +15,8 @@ e7aba16d6a5e: Pull complete
 
 What's next:
     View a summary of image vulnerabilities and recommendations → docker scout quickview postgres
-PS C:\Users\Richard Essuman> docker run --name postgres-db -e POSTGRES_PASSWORD=@R10581878e -p 5432:5432 -d postgres^C
-PS C:\Users\Richard Essuman> docker run --name postgres-db -e POSTGRES_PASSWORD="@R10581878e" -p 5432:5432 -d postgres
+PS C:\Users\Richard Essuman> docker run --name postgres-db -e POSTGRES_PASSWORD=lkkkfjfk -p 5432:5432 -d postgres^C
+PS C:\Users\Richard Essuman> docker run --name postgres-db -e POSTGRES_PASSWORD=lkkkfjfk" -p 5432:5432 -d postgres
 79adc2306da148f0806bb30c850578397b9817934738af7200863bb2778ca8f6
 PS C:\Users\Richard Essuman> docker ps
 CONTAINER ID   IMAGE      COMMAND                  CREATED         STATUS         PORTS                    NAMES
