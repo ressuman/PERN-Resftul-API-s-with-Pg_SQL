@@ -7,9 +7,9 @@ import cors from "cors";
 import colors from "colors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-//import pool, { connectDB, testConnection } from "./connection/db/connect.js";
 //import userRoutes from "./routes/userRoutes.js";
 import { fileURLToPath } from "url";
+import sequelize, { testConnection } from "./connection/database/sequelize.js";
 //import errorHandler from "./middlewares/errorHandler.js";
 //import setupDatabase from "./data/setup/setupDatabase.js";
 
@@ -72,12 +72,16 @@ app.get("/", (req, res) => {
 // Testing Postgres Connection
 app.get("/test-db", async (req, res) => {
   try {
-    const result = await pool.query("SELECT NOW() AS current_time");
-    const dbName = await pool.query("SELECT current_database() AS db_name");
+    await testConnection();
+    const [results] = await sequelize.query("SELECT NOW() AS current_time");
+    const [dbName] = await sequelize.query(
+      "SELECT current_database() AS db_name"
+    );
+
     res.status(200).json({
-      message: "Database connection successful",
-      currentTime: result.rows[0].current_time,
-      database: dbName.rows[0].db_name,
+      message: "Database connection successful (via Sequelize)",
+      currentTime: results[0].current_time,
+      database: dbName[0].db_name,
     });
   } catch (error) {
     console.error("❌ Database connection error:", error.message.red);
@@ -95,15 +99,8 @@ const initializeApp = async () => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV}`.blue);
     console.log(`🖥️  Server: ${process.env.HOST}:${process.env.PORT}`.yellow);
 
-    // const pool = await connectDB();
-    // if (!pool) throw new Error("Database connection failed");
-
-    // const dbConnected = await testConnection();
-    // if (!dbConnected) throw new Error("Test connection failed");
-
-    // if (process.env.NODE_ENV === "development") {
-    //   await setupDatabase(); // Create & seed only in dev
-    // }
+    await testConnection(); // Sequelize test
+    await sequelize.sync({ alter: true }); // Auto-create/update tables
 
     app.listen(process.env.PORT, process.env.HOST, () => {
       console.log(`🎉 Server running at ${process.env.HOST_URL}`.rainbow);
