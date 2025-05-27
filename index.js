@@ -7,7 +7,7 @@ import cors from "cors";
 import colors from "colors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-//import userRoutes from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { fileURLToPath } from "url";
 import sequelize, { testConnection } from "./connection/database/sequelize.js";
 import db from "./models/index.js";
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Routes
-//app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
