@@ -7,7 +7,7 @@ import cors from "cors";
 import colors from "colors";
 import morgan from "morgan";
 import dotenv from "dotenv";
-//import { connectDB, testConnection } from "./connection/db/database.js";
+import pool, { connectDB, testConnection } from "./connection/db/connect.js";
 //import studentRoutes from "./routes/studentRoutes.js";
 import { fileURLToPath } from "url";
 
@@ -67,6 +67,22 @@ app.get("/", (req, res) => {
   `);
 });
 
+// Testing Postgres Connection
+app.get("/test-db", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT NOW() AS current_time");
+    const dbName = await pool.query("SELECT current_database() AS db_name");
+    res.status(200).json({
+      message: "Database connection successful",
+      currentTime: result.rows[0].current_time,
+      database: dbName.rows[0].db_name,
+    });
+  } catch (error) {
+    console.error("❌ Database connection error:", error.message.red);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
+
 // Initialize Application
 const initializeApp = async () => {
   try {
@@ -74,11 +90,11 @@ const initializeApp = async () => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV}`.blue);
     console.log(`🖥️  Server: ${process.env.HOST}:${process.env.PORT}`.yellow);
 
-    // const pool = await connectDB();
-    // if (!pool) throw new Error("Database connection failed");
+    const pool = await connectDB();
+    if (!pool) throw new Error("Database connection failed");
 
-    // const dbConnected = await testConnection();
-    // if (!dbConnected) throw new Error("Test connection failed");
+    const dbConnected = await testConnection();
+    if (!dbConnected) throw new Error("Test connection failed");
 
     app.listen(process.env.PORT, process.env.HOST, () => {
       console.log(`🎉 Server running at ${process.env.HOST_URL}`.rainbow);
