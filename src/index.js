@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import pool, { connectDB, testConnection } from "./connection/db/connect.js";
 import userRoutes from "./routes/userRoutes.js";
 import { fileURLToPath } from "url";
+import errorHandler from "./middlewares/errorHandler.js";
 
 // Setup environment
 dotenv.config();
@@ -83,6 +84,9 @@ app.get("/test-db", async (req, res) => {
   }
 });
 
+// Error Handling Middleware
+app.get(errorHandler);
+
 // Initialize Application
 const initializeApp = async () => {
   try {
@@ -113,8 +117,6 @@ const initializeApp = async () => {
     process.exit(1);
   }
 };
-
-// Error Handling Middleware
 
 // Global Error Handlers
 process.on("uncaughtException", (error) => {
