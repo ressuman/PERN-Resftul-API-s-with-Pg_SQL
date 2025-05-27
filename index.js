@@ -10,6 +10,8 @@ import dotenv from "dotenv";
 //import userRoutes from "./routes/userRoutes.js";
 import { fileURLToPath } from "url";
 import sequelize, { testConnection } from "./connection/database/sequelize.js";
+import db from "./models/index.js";
+
 //import errorHandler from "./middlewares/errorHandler.js";
 //import setupDatabase from "./data/setup/setupDatabase.js";
 
@@ -100,7 +102,8 @@ const initializeApp = async () => {
     console.log(`🖥️  Server: ${process.env.HOST}:${process.env.PORT}`.yellow);
 
     await testConnection(); // Sequelize test
-    await sequelize.sync({ alter: true }); // Auto-create/update tables
+    await db.sequelize.sync({ alter: true });
+    //await sequelize.sync({ alter: true }); // Auto-create/update tables
 
     app.listen(process.env.PORT, process.env.HOST, () => {
       console.log(`🎉 Server running at ${process.env.HOST_URL}`.rainbow);
