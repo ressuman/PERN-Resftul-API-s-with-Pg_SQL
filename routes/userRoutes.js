@@ -7,6 +7,7 @@ import {
   getUser,
   hardDeleteUser,
   patchUser,
+  patchUserByEmployerId,
   softDeleteUser,
   updateUser,
 } from "../controllers/userControllers.js";
@@ -21,6 +22,8 @@ router.post("/new", createUser); // Create a new user
 router.get("/:id/user", getUser); // Get a specific user by ID
 
 router.patch("/patch/:id", patchUser); // Partially update a user
+
+router.patch("/employer/:employerId", patchUserByEmployerId);
 
 router.put("/update/:id", updateUser); // Fully update a user
 
